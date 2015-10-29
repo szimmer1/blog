@@ -21,14 +21,15 @@ img {
 }
 
 .header {
+  color: white;
   text-align: center;
   top: auto;
-  margin: 0 auto;
+  margin: 40% 0 0 0;
   padding: 2em 1em;
 }
 
 .sidebar {
-  background: $background-color;
+  background: $background-url;
   color: $text-color;
 
   .social-links {
@@ -54,8 +55,13 @@ img {
 }
 
 .author-avatar {
+  border: 2px solid $white;
   border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover !important;
   width: 128px;
+  height: 128px;
   float: right;
 }
 
@@ -65,7 +71,7 @@ img {
 }
 
 a.brand-title {
-  color: $text-color;
+  color: $white;
   font-size: 2em;
   font-family: $heading-font-family;
   font-weight: bold;
@@ -76,7 +82,6 @@ a.brand-title {
   display: block;
   margin-top: 0.5em;
   font-weight: 300;
-  color: $text-color;
 }
 
 .nav {
@@ -256,7 +261,7 @@ footer {
   }
 
   .header {
-    margin: 80% 0 0;
+    margin: 40% 0 0 0;
     text-align: right;
   }
 
