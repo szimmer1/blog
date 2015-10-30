@@ -15,7 +15,6 @@ url: http://szimmer1.github.io/blog # the base hostname & protocol for your site
 ####################################
 #
 markdown:    kramdown
-highlighter: rouge
 excerpt_separator: <!--more-->
 sass:
   sass_dir: _sass
@@ -69,3 +68,5 @@ owner:
 
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]
+
+highlighter: pygments
