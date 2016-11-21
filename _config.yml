@@ -40,7 +40,7 @@ owner:
   bio: "Thoughts, snippets, and how-to's"
   email: shahar.zimmerman.usa@gmail.com
   disqus-shortname: shaharzimmerman
-  twitter: GnarShahar #username
+  twitter: #GnarShahar #username
   facebook: #username
   google:
     plus: #username
@@ -50,7 +50,6 @@ owner:
     ad-slot:
   bing-verify:
   github: szimmer1 #username
-  stackoverflow: 3970178/shaharz   # from a "http://stackoverflow.com/users/123456/username" link
   linkedin: shaharzimmermanusa #username
   xing: #username
   instagram: #username
@@ -65,6 +64,7 @@ owner:
   weibo: #username
   flickr: #username
   codepen: #username
+  resume: resume.pdf
 
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]

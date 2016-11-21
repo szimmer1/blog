@@ -42,7 +42,7 @@ img {
         margin-left: 1em;
         font-size: 80%;
         a.social-link-item {
-          color: $secondary;
+          color: $white;
           &:hover,
           &:focus {
             background: none;
@@ -101,7 +101,7 @@ a.brand-title {
 
 .nav-item a {
   background: transparent;
-  color: $secondary;
+  color: $white;
   margin-top: 1em;
   letter-spacing: 0.05em;
   text-transform: capitalize;
