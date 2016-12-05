@@ -71,19 +71,19 @@ projects:
     thumbnail: /img/jlr.png
     github: /szimmer1/jlr
     description: |
-      A ruby implementation of the json-logic specification, which allows for platform- and language-agnostic, serializable rules to be written and consumed by both the front and back-end.
+      A ruby implementation of the json-logic specification, which allows for platform- and language-agnostic, serializable rules to be written once and consumed by both the front and back-end.
   - name: react-es6-boilerplate
     date: Dec 2015
     thumbnail: /img/reactes6bp.png
     github: /szimmer1/react-es6-boilerplate
     description: |
-      A template to accelerate React JS projects in written in ECMAScript 6. Examples based off of Azat Mardan''s ReactJS course on Udemy.
+      A template to accelerate React JS projects in written in ECMAScript 6. Examples based off of Azat Mardan's ReactJS course on Udemy.
   - name: TraceJS
     date: March 2015
     thumbnail: /img/tracejs.png
     github: /camargo/tracejs
     description: |
-      A javascript ray tracer, all done in pure JS in the browser.
+      A javascript ray tracer, coded in Typescript and can be run offline or online in the browser.
 
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]
