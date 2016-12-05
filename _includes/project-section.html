@@ -8,8 +8,18 @@
     </a>
     <span class="post-meta">{{ project.date }}</span>
     <p>{{ project.description }}</p>
-    <a class="github-button" href="https://github.com{{ project.github }}" data-icon="octicon-eye" data-style="mega" data-count-href="{{ project.github }}/watchers" data-count-api="{{ project.github }}#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch {{ project.github }} on GitHub">Watch</a>
-    <a class="github-button" href="https://github.com{{ project.github }}" data-icon="octicon-star" data-style="mega" data-count-href="{{ project.github }}/stargazers" data-count-api="/repos{{ project.github }}#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star {{ project.github }} on GitHub">Star</a>
-    <a class="github-button" href="https://github.com{{ project.github }}/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download {{ project.github }} on GitHub">Download</a>
+    {% if project.collaborators %}
+    <div class="collaborators">
+      <span>Collaborators</span><br>
+      {% for collab in project.collaborators %}
+      <a href="https://github.com/{{ collab }}">{{ collab }}</a>{% unless forloop.last %} <span>/</span>{% endunless %}
+      {% endfor %}
+    </div>
+    {% endif %}
+    <div class="github-buttons">
+      <a class="github-button" href="https://github.com{{ project.github }}" data-icon="octicon-eye" data-style="mega" data-count-href="{{ project.github }}/watchers" data-count-api="{{ project.github }}#subscribers_count" data-count-aria-label="# watchers on GitHub" aria-label="Watch {{ project.github }} on GitHub">Watch</a>
+      <a class="github-button" href="https://github.com{{ project.github }}" data-icon="octicon-star" data-style="mega" data-count-href="{{ project.github }}/stargazers" data-count-api="/repos{{ project.github }}#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star {{ project.github }} on GitHub">Star</a>
+      <a class="github-button" href="https://github.com{{ project.github }}/archive/master.zip" data-icon="octicon-cloud-download" data-style="mega" aria-label="Download {{ project.github }} on GitHub">Download</a>
+    </div>
   </div>
 </div>
