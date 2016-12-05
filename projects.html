@@ -1,0 +1,15 @@
+---
+layout: page
+title: Open-source projects
+permalink: /projects/
+---
+
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<div class="row">
+  {% for project in site.projects %}
+    <div class="col-md-4 col-xs-12">
+    {% include project-section.html %}
+    </div>
+  {% endfor %}
+</div>
+<!-- Place this tag in your head or just before your close body tag. -->

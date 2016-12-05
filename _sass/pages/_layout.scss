@@ -6,7 +6,10 @@ a {
 a:hover,
 a:focus {
   color: lighten($primary, 10%);
-  text-decoration: none;
+  text-decoration: underline;
+  .thumbnail {
+    text-decoration: none;
+  }
 }
 
 
@@ -94,7 +97,7 @@ a.brand-title {
 }
 
 .nav-item {
-  display: inline-block;
+  //display: inline-block;
   *display: inline;
   zoom: 1;
 }
@@ -105,7 +108,7 @@ a.brand-title {
   margin-top: 1em;
   letter-spacing: 0.05em;
   text-transform: capitalize;
-  font-size: 85%;
+  font-size: 110%;
 }
 
 .content-subhead {
@@ -237,6 +240,10 @@ a.post-tag {
 
 // footer
 footer {
+  //position: absolute;
+  //bottom: 0;
+  width: 100%;
+  height: $footer-height;
   text-align: center;
   padding: 3em 0;
 }
@@ -257,6 +264,7 @@ footer {
   .content {
     padding: 2em 3em 0;
     margin-left: 25%;
+    margin-bottom: $footer-height;
   }
 
   .header {

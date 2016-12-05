@@ -1,3 +1,28 @@
+# Blog
+last updated: 12-2-16, by: Shahar Zimmerman
+
+## Develop
+Follow these steps to run & develop the project on a local webserver.
+
+#### Dependencies
+Ruby gems: `jekyll`, `jekyll-sitemap`, `pygments.rb`
+
+This project supports rvm; as soon as you enter the directory, rvm will create a gemset for you named `jekyll`, to which you can install the dependencies with this command:
+
+    gem install jekyll jekyll-sitemap pygments.rb
+
+#### Clone & update submodules
+    git clone https://github.com/szimmer1/blog.git
+    cd blog
+    git checkout gh-pages
+    git submodule init
+    git submodule update --checkout
+    
+#### Run
+    jekyll serve
+
+Original README from forked repo:
+
 # Leonids Jekyll Themes
 
 **[Leonids](http://renyuanz.github.io/leonids)** is a two column responsive Jekyll theme perfect for powering your GitHub hosted blog. The idea is inspired by PureCSS blog layout.

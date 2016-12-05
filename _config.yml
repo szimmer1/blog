@@ -3,11 +3,10 @@
 # Site wide configuration
 ####################################
 #
-title: Thoughts, snippets, and how-to's
+title: "Thoughts, snippets, and how-to's"
 email: shahar.zimmerman.usa@gmail.com
-description: > # this means to ignore newlines until "baseurl:"
-  A simple and awesome blog theme powered by jekyll. Inspired by PureCSS blog layout and build by bootstrap 4.
-url: https://szimmer1.github.io/blog # the base hostname & protocol for your site
+description: "A simple and awesome blog theme powered by jekyll. Inspired by PureCSS blog layout and build by bootstrap 4."
+url: "https://szimmer1.github.io/blog"
 
 #
 ###################################
@@ -65,6 +64,26 @@ owner:
   flickr: #username
   codepen: #username
   resume: /resume.pdf
+
+projects:
+  - name: json-logic-ruby
+    date: Oct 2016
+    thumbnail: /img/jlr.png
+    github: /szimmer1/jlr
+    description: |
+      A ruby implementation of the json-logic specification, which allows for platform- and language-agnostic, serializable rules to be written and consumed by both the front and back-end.
+  - name: react-es6-boilerplate
+    date: Dec 2015
+    thumbnail: /img/reactes6bp.png
+    github: /szimmer1/react-es6-boilerplate
+    description: |
+      A template to accelerate React JS projects in written in ECMAScript 6. Examples based off of Azat Mardan''s ReactJS course on Udemy.
+  - name: TraceJS
+    date: March 2015
+    thumbnail: /img/tracejs.png
+    github: /camargo/tracejs
+    description: |
+      A javascript ray tracer, all done in pure JS in the browser.
 
 include: [".htaccess"]
 exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.rb", "tmp", "less", "*.sublime-project", "*.sublime-workspace", "test", "spec", "Gruntfile.js", "package.json", "node_modules", "Gemfile", "Gemfile.lock", "LICENSE", "README.md"]

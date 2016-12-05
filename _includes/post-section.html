@@ -18,6 +18,8 @@
     {% endif %}
 
     <p class="post-meta">
+      On
+      <span class="post-author">{{ post.date | date: "%b %-d, %Y" }}</span>
       By
       <a class="post-author" href="{{ author.site }}">{{ author.name }}</a>
       {% if post.tags.size > 0 %}
