@@ -1,0 +1,128 @@
+---
+title: Combining Ruby Modules and Classes
+layout: post
+excerpt: Beginner's excited ramblings about the Ruby language
+---
+<p><b>Ah, summer...</b></p>
+<p>I'm currently learning Ruby on Rails.  As a total beginner to Ruby,
+this task has proven to be a difficult undertaking. To an experienced
+programmer, I'm sure that picking up another language is a small matter of 
+learning syntax and then
+a few new ways of organizing scopes and abstract data types.
+However, to someone like me, who only really started programming a few months
+ago and has working knowledge of exactly <em>one</em> language, Java, learning 
+a language like Ruby ain't a cakewalk. I've decided to write regular
+instructive posts on the language in order to help myself solidify my own understanding
+as well as anyone finding themselves in this part of the internet.<br>
+
+<h3>Differences between Ruby and Java</h3>
+<p>In Java, we have <em>classes</em>, which define an instance of the class (object) and way to manipulate it
+(methods, both static and instance). For example, we may have a class definition of a <code>Rational</code> number
+extending <code>Integer</code>:
+{% highlight Java%}
+class Rational extends Integer {
+  //private class variables
+  private int numerator;
+  private int denominator;
+
+  //initializers
+  public Rational(int num, int denom) {
+    numerator = num;
+    denominator = denom;
+    }
+
+  public Rational(){
+    numerator = 0;
+    denominator = 1; //in reality you can't divide by 0
+  }
+  
+  //instance method
+  public int getNum() {
+    return this.numerator;
+  }
+
+  //static method
+  public static Rational add(Rational one,Rational two) {
+  Rational sum = new Rational();
+  sum.denominator = GCD(one.denominator + two.denominator);
+  sum.numerator = one.numerator * (GCD/one.denominator) + two.numerator * (GCD/two.denominator);
+  return sum;
+  }
+}
+{% endhighlight %}
+<p>What we've done is extended the <code>Integer</code> class,  which let's say provides us a <code class="method">GCD</code> method,
+to a <code>Rational</code> class which includes class variables, instance initializers, and a static "class" method <code class="method">add</code>. 
+Importantly, <b>all class methods must be defined within the class</b>. This makes it tedious to rewrite methods that often use similar parameters.</p>
+
+<p>In Ruby, several things are different. You don't have to declare class variables. You don't have to define class and instance methods within the class.
+You can define a method that deals with an instance of the class, <em>outside of the class definition</em>, in a module.
+For example, let's implement <code>Rational</code> in Ruby:</p>
+{% highlight ruby %}
+class Rational < Integer
+  # initializer
+  def initialize(*ints)
+    @num, @denom = ints
+  end
+
+  # accessors
+  attr_accessor :denom
+  attr_accessor :num
+end
+{% endhighlight %}
+<p>Yup, that's pretty much all you need in a class definition in Ruby. To get the instance method, <code>get_num</code> (changed for Ruby naming convention)
+, and the static method, <code>add</code>,
+we use two different Ruby <em>modules</em>. Modules exist in Ruby to allow inheritance of methods without inheritance of the entire parent class. Multiple classes
+can <em>mix in</em> a module to share common API methods easily. Our first module will be for <code>get_num</code>:
+{% highlight ruby %}
+module GetNums
+  def get_num 
+    @num
+  end
+end
+{% endhighlight %}
+Our second module:
+{% highlight ruby %}
+module Add
+  def add(*nums) 
+    sum = Rational.new
+    sum.denom = GCD(nums.denom)
+    nums.each do |num|
+      sum.num += GCD/num.denom * num.num
+    end
+    return sum
+  end
+end
+{% endhighlight %}
+<blockquote>A nice feature on ruby is the ability to include an undetermined number of arguments, <code>*args</code> in methods</blockquote>
+<p>You may be wondering why we made a module for instance methods and a module for static methods instead of making one module containing both. The reason is 
+that Ruby only allows mixing in of either instance methods <em>or</em> static methods at any one time. We use the <code>require</code> keyword to mix in static methods
+and the <code>include</code> keyword to mix in instance methods (i for instance!). I don't know if we could just use both keywords on a single module that has both instance
+and static methods; that'd be a good experiment. Now we mix in our modules into our Ruby <code>Rational</code> class:
+
+<blockquote>One interesting thing about Ruby is that instance variables <em>are never private</em>. Anyone can access or overwrite an instance variable if they
+know it using <code>object.instance_variable_get(:@var)</code>. While this is a strength for usability, it seems to me like a pretty major security issue.</blockquote>
+{% highlight ruby %}
+class Rational < Integer
+
+  include GetNums
+
+  require Add
+
+  # initializer
+  def initialize(*ints)
+    @num, @denom = ints
+  end
+
+  # accessors
+  attr_accessor :denom
+  attr_accessor :num
+end
+{% endhighlight %}
+<p>Now we can use our Ruby class to do the stuff the methods do:</p>
+{% highlight ruby %}
+real = Rational.new(5,6)
+puts real.get_num
+
+real2 = Rational.new(7,8)
+puts add(real,real1)
+{% endhighlight %}

@@ -1,0 +1,74 @@
+---
+title: Browserify rules
+layout: post
+excerpt: Then something clicked, and I understood the full awesome power of Browserify
+tags: ["javascript","frontend"]
+---
+        <p>
+            While I was developing some client javascript today, I came across a situation where I wanted server-side directory
+            information in my client javascript. Specifically, I needed to refer to a static html template from some Angular
+            directive code.
+            </p>
+        <h3>Directory structure</h3>
+<pre><code>root
+    - ng
+        - dist
+            - js
+                - my_app
+                      my_app_bundle.js
+                    - partials
+                          directive_template.html
+        - src
+            - js
+                - my_app
+                      my_app_controllers.js
+                      my_app_services.js
+                      my_app_directives.js
+                      my_app.js
+                    - partials
+                          directive_template.html
+</code></pre>
+        <p>
+            I do all my development on files in the src directory, and have a <code>gulp watch</code> process using <b>Browserify</b>  to
+            compile the source
+            files into the dist/my_app_bundle.js file, as well as copying any html files with from the src/ directory into dist/ with
+            the same exact directory structure.
+        </p>
+        <h3>Directive code</h3>
+<pre><code>angular.module('myapp.directives', [])
+        .directive('myDirective', function() {
+            return {
+                templateUrl: "/ng/dist/js/my_app/partials/directive_template.html",
+                link: function(scope, ele) {
+                    // link fn code
+                }
+            }
+        })
+</code></pre>
+        <p>
+            Here you can see the <code>templateUrl</code> hardcoded.
+            This is an easy solution in the moment. But it sucks in the long run - it's not resistant to directory structure changes and prone
+            to bugs.
+        </p>
+        <h3>The solution</h3>
+<pre><code>angular.module('myapp.directives', [])
+        .directive('myDirective', function() {
+            return {
+                templateUrl: __dirname + "/partials/directive_template.html",
+                link: function(scope, ele) {
+                    // directive code
+                }
+            }
+        })
+</code></pre>
+<p>
+    During browserify compilation, <br><code>__dirname + '/partials/directive_template.html'</code> <br>is compiled to<br>
+    <code>'/ng/dist/js/my_app' + '/partials/directive_template.html'</code>
+</p>
+        <p>
+            Browserify re-uses the Node.js module system. I knew this, and wondered whether Browserify would also know about
+            Node.js-like globals. Turns out it does! I thought that was cool enough to write a blog post on.
+        </p>
+
+
+

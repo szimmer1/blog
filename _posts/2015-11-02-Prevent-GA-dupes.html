@@ -1,0 +1,77 @@
+---
+title: Preventing Google Analytics script duplications
+layout: post
+excerpt: A hack to prevent adding multiple Google Analytics scripts to your page
+tags: ["javascript","google analytics"]
+---
+<p>
+<pre><code>(function (i, s, o, g, r, a, m) {
+    window['GoogleAnalyticsObject'] = 'ga';
+    window['ga'] = window['ga'] || function () {
+        (window['ga'].q = window['ga'].q || []).push(arguments)
+    },
+    window['ga'].l = 1 * new Date();
+    a = document.createElement('script'),
+    m = document.getElementsByTagName('script')[0];
+    a.async = 1;
+    a.src = '//www.google-analytics.com/analytics.js';
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+ga('create', 'UA-xxxxxxxx-x', 'xxxxxx.com');
+ga('send', 'pageview');
+</code></pre>
+    This is the Google Analytics (from now on <i>GA</i>) code snippet given to website admins/devs that enables GA for a given UA-number.
+    Adding GA to our internal web app today, I noticed that the script Google provides doesn't actually have a mechanism
+    to prevent people from adding duplicate scripts to their pages. I tested it and saw it was true - if the snippet was included twice, we
+    had two scripts inserted to the DOM as the below picture shows.
+</p>
+        <img src="{{ site.url }}/img/duplicate_script.png" class="img-responsive" />
+<h3>Why would you include the GA snippet more than once, anyway?</h3>
+<p>
+    If you're working on a legacy codebase like I am, it's really hard to find one place to include a script that will make it to every view
+    of the website. This is because scripts/stylesheets are often not
+    organized by an asset pipeline and included via templates - they are often hard-coded redundantly into various different views. In my
+    case, different permutations of imperative PHP functions are used in all of the > 100 views of the website, each with hard-coded script elements.
+    Therefore, to get full domain coverage, I have to include the GA snippet in each imperative function, which causes the snippet to get in multiple times.
+</p>
+<h3>Why is this even a problem?</h3>
+<p>
+    This is a problem for two reasons. One, each script inserted to the DOM is another file the browser has to download which will slow down
+    the page, especially on mobile and in poor network areas. It could be argued that the <code>async</code> attribute and the fact that
+    the browser will cache after the first download, making this problem somewhat irrelevant to performance. Although it's still poor style to include
+    duplicate scripts. The second, more potentially serious problem, is that the snippet sends a <code>'create'</code> event, and a <code>'pageview'</code>
+    event. I'm not entirely sure what happens on Google's end, but I get nervous that with each duplicate snippet on the DOM these events will be duplicated
+    as well. Result: wildly inaccurate GA page view data.
+</p>
+<h3>The hack</h3>
+<p>
+    We can prevent this in a simple way - add an id to the script element, and check if an element with this id exists every time we want to
+    create another script or send the <code>'create'</code> and <code>'pageview'</code> events.
+<pre><code>(function (i, s, o, g, r, a, m) {
+    if (a) return;
+    window['GoogleAnalyticsObject'] = 'ga';
+    window['ga'] = window['ga'] || function () {
+        (window['ga'].q = window['ga'].q || []).push(arguments)
+    },
+    window['ga'].l = 1 * new Date();
+    a = document.createElement('script'),
+    m = document.getElementsByTagName('script')[0];
+    a.id = 'ga-script';
+    a.async = 1;
+    a.src = '//www.google-analytics.com/analytics.js';
+    m.parentNode.insertBefore(a, m)
+
+    window.ga('create', 'UA-xxxxxxxx-x', 'xxxxxx.com');
+    window.ga('send', 'pageview');
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga', document.getElementById('ga-script'));
+</code></pre>
+        Specifically, we've moved our <code>ga</code> calls into the closure, making sure we explicitly call from <code>window</code> because we're no longer in the global namespace.
+        To prevent script insertion <i>and</i> duplicate <code>ga</code> calls in one go, we simply pass in <code>a</code> as <code>document.getElementById('ga-script')</code>
+        and make the very first line of the closure <code>if (a) return;</code>. If no element has the id <i>ga-script</i>, <code>a == null</code> and the
+        function doesn't return. We also have to remember to give our new script element the id, by <code>a.id = 'ga-script';</code>.
+</p>
+<p>
+    And there you have it. I'm almost positive Google has a way of normalizing duplicate calls to its Analytics service, but just in case they
+    don't, and for the sake of code cleanliness, I now use this hack in my web app.
+</p>

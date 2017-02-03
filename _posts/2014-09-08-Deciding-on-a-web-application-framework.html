@@ -1,0 +1,43 @@
+---
+layout: post
+title: Deciding on a web application framework
+excerpt: With a new framework coming out every week, how is a professional
+---
+
+<h4>Disclaimer: When I wrote this I knew absolutely nothing about Node. Now I know that Node is about as much of a framework as the Ruby language itself. But will keep this here... for science.</h4>
+
+<p>I've devoted quite a few days in the past month to learning Ruby on Rails.
+This decision seemed logical: since I was a beginner, I needed a framework and language that would be easy to comprehend (hence Ruby).
+Also, I'd seen that many applications use the framework and that many freelancers specialize in programming it. Hey, it's 
+"easy" and there's demand! I was in.</p>
+
+<p>Rails specializes in MVC control and stability. Years of use have created a stable public build with persistent conventions and thriving community.
+With Ruby as a clean and readable language, writing models, controllers, and views is pleasant. Rails also
+provides useful data structures like the <code>session</code> and <code>flash</code> hashes which "remember" your activities even when
+you leave the application.</p>
+
+<p>Something that Rails lacks in, however, is a clean front end. It produces views using embedded ruby in html, which is essentially just using
+html. The essence of web UI is javascript, which Rails has trouble implementing. Rails is great for large application back-ends, but, on it's own,
+can't serve data to the user in a efficient, modern way. Despite this, the giant community around Rails has developed multiple plugins for
+modern front-end Javascript frameworks such as Angular.</p>
+
+<h3>Node.js</h3>
+<p>Is a framework, leveraging the power of javascript, that "uses an event-driven, non-blocking I/O model that make it perfect for
+data-intensive, real-time apps"...I left out the rest but that's the gist. Max Ogden, director of OaklandJS, describes the situation well:</p>
+<blockquote>
+  <p>Rails, the popular web framework, is great for modeling complex business logic, e.g. using code to represent real-life business
+  objects like accounts, loans, etc. Node.js could address that, but since it is designed for I/O problems and doesn't understand "business logic",
+  there would be definite drawbacks.</p>
+</blockquote>
+<p>Node shines in delivering data in a non-blocking way from multiple sources. This works well for views because it allows a programmer to
+create single-page apps, which are the epitomy of good UI in my opinion. Furthermore, since it is written in javascript it can integrate 
+other useful javascript libraries such as AngularJS with ease.</p>
+<p>However, Node.js doesn't provide a total web framework solution. It would be interesting to learn a web framework implementation of Node.js such
+as <a href="github.com/balderdashy/sails">Sails</a> which intends to replicate Rails.</p>
+
+<h3>What to do?</h3>
+<p>The question of my day is, continue learning Rails, which is designed for business logic back-ends, or start learning javascript and Node.js, which
+allows for rapid creation of applications with highly successful UI. When it comes down to it, right now I'm interested in getting an app running, top-to-bottom.
+While it seems like Rails is the easy choice because of my studying thus far and the agility of development, learning a javascript based framework will
+allow for much more freedom in designing a cool front-end. Since my app is going to be small and not really trying to do business, it sure as hell should have a 
+nice UI. It may be time to dabble in UX while I don't have any business to worry about.</p>

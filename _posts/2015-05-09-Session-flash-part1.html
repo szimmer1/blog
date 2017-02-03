@@ -1,0 +1,206 @@
+---
+title: How to build a Session Flash in Angular and Bootstrap, Part 1
+layout: post
+excerpt: The first part of the how-to tutorial
+---
+<p>
+    People coming from Ruby on Rails, web2py, and other opinionated frameworks to Angular and Node.js will
+    surely miss some great features such as built-in OAuth, synchronization, and security. One of these modules
+    things that is absolutely essential for a front-end application is the useful "Session Flash".
+    In the next two blog posts, I'll show you step-by-step, with explanation, how to build a fully customizable Session Flash
+    with Angular and Bootstrap.
+</p>
+        <p>
+            <h2>Who is this tutorial for?</h2>
+            Anyone who has a basic understanding of web development (html, css, javascript). If you have a basic understanding of Angular,
+            you'll rock this tutorial.
+            If you don't know what a webserver is or how to use one, this tutorial may be hard to follow. However, everything you
+            need to know is here and a beginner could successfully complete the tutorial.
+        </p>
+<p>
+<h2>What you'll be making:</h2>
+<a href="proj/flash" target="_blank">Click for a demo</a>
+</p>
+<p>
+<h2>What you'll learn:</h2>
+<ul>
+    <li>Angular - a little bit of everything, and enough to build a basic app. Some advanced topics - events and directives.</li>
+    <li>Bootstrap - working with modals.</li>
+    <li>Other nuances of app development, such as how to structure your project directories and how to properly include javascript libraries</li>
+</ul>
+
+        Ready to go!? Let's do this.
+</p>
+<h2>In part 1, we'll set up an Angular app with some user-input features</h2>
+<p>
+    Let's make a to-do list app. Our directory structure will look like this to start out:
+<code><pre>
+index.html
+views
+    - list.html
+js
+    - app.js
+    - controllers.js
+    - directives.js
+</pre></code>
+</p>
+<p>
+    We'll define our angular app module first. We're defining a module 'todoApp' which has dependencies of modules
+    'todoControllers' and 'todoDirectives'. To start, we we'll just set up the "shells" of the modules.<br>
+    <h3>app.js</h3>
+
+    {% highlight javascript %}
+    (function(angular) {
+
+        angular.module('todoApp', ['todoControllers', 'todoDirectives']);
+
+    })(angular);
+    {% endhighlight %}
+
+        <br>
+<h3>controllers.js</h3>
+    <b>Note:</b> we have added a default to-do item in our list, which we'll use to validate that angular is up an running
+    as expected in the next section.
+
+    {% highlight javascript %}
+    (function(angular) {
+
+        angular.module('todoControllers', [])
+            .controller('MainController', ['$scope', function($scope) {
+
+            $scope.items = [
+                {
+                    task: "Groceries",
+                    due: "Tomorrow"
+                }
+            ]
+
+            }])
+
+    })(angular);
+    {% endhighlight %}
+
+        <br>
+<h3>directives.js</h3>
+
+    {% highlight javascript %}
+    (function(angular) {
+
+        angular.module('todoDirectives', []);
+
+    })(angular);
+    {% endhighlight %}
+</p>
+<p>
+    Next, let's write our html. This will be the view template for our to-do list. We'll start
+    with a very basic layout, and try to load our default item which we defined in <code>MainController</code>
+
+    <h3>list.html</h3>
+    {% highlight html %}
+    <h3>My to-do list</h3>
+    <ul>
+        <li ng-repeat="item in items">
+            Task: {% raw %}{{item.task}}{% endraw %}<br>
+            Due: {% raw %}{{item.due}}{% endraw %}
+        </li>
+    </ul>
+    {% endhighlight %}
+
+        <br>
+<h3>index.html</h3>
+        <font color="red"><b>Note:</b> we're getting Bootstrap css & js, jQuery js, and Angular js via CDN. You must have all these libraries, and include them in this order.</font>
+
+
+{% highlight html %}
+    <!DOCTYPE html>
+    <html>
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>ToDo</title>
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    </head>
+    <body ng-app="todoApp">
+
+    <div class="container" ng-controller="MainController">
+        <div class="row">
+            <div class="col-md-12">
+                <ng-include src="'views/list.html'"></ng-include>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="/code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script type="text/javascript" src="js/controllers.js"></script>
+    <script type="text/javascript" src="js/directives.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+    </body>
+    </html>
+    {% endhighlight %}
+
+        <br>
+    Now if you serve index.html, you should see this
+        <img src="img/todo_1.png" class="no-source">
+        Angular is up and running!<br>
+        We still, however, need to add a form so someone can add new items. Let's do this now.
+</p>
+        <p>
+            <h3>Add inputs to list.html</h3>
+            We want to add a field for <code>task</code> and a field for <code>due</code>. Here's the new list.html:
+{% highlight html %}
+<input type="text" placeholder="Task" ng-model="task">
+<input type="text" placeholder="Due" ng-model="due">
+<button ng-click="makeItem()">Add item</button>
+
+<h3>My to-do list</h3>
+<ul>
+    <li ng-repeat="item in items">
+        Task: {{item.task}}<br>
+        Due: {{item.due}}
+    </li>
+</ul>
+{% endhighlight %}
+        <br>
+        And the new look:
+        <img src="img/todo_2.png" class="no-source">
+        We'll now hook up the functionality our <code>MainController</code>
+        </p>
+        <p>
+            <h3>Push to-do item to list</h3>
+        We need two more 2-way-bound scope variables, <code>task</code> and <code>due</code>. In our function
+        <code>makeItem</code>, we take these two variables, append them to the list, and reset their values.
+{% highlight javascript %}
+(function(angular) {
+
+    angular.module('todoControllers', [])
+        .controller('MainController', ['$scope', function($scope) {
+
+            $scope.items = [
+                {
+                    task: "Groceries",
+                    due: "Tomorrow"
+                }
+            ]
+
+            $scope.task = "";
+            $scope.due = "";
+
+            $scope.makeItem = function() {
+                this.items.push({
+                    task: this.task,
+                    due: this.due
+                })
+                this.task = this.due = "";
+            }
+    }])
+
+})(angular);
+{% endhighlight %}
+        </p>
+        <p>
+            We now have in fully functioning to-do list Angular app. In
+            <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}">Part 2</a>
+            , we'll implement our "Session Flash" module.
+        </p>

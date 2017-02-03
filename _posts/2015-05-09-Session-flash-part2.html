@@ -1,0 +1,165 @@
+---
+title: How to build a Session Flash in Angular and Bootstrap, Part 2
+layout: post
+excerpt: The second part of the how-to tutorial
+---
+<p>
+    In this part, we'll dive into building the Session Flash module. If you haven't seen
+    <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}">Part 1</a>
+    yet, please read it first because we're building on code we wrote there.
+</p>
+<h2>In part 2, we'll build the Session Flash module</h2>
+    <p>
+        In Angular, it's good practice to use directives whenever we want to make changes to the DOM.
+        It's time to define our <code>todoFlash</code> directive.
+    </p>
+        <p>
+            <h3>directives.js</h3>
+
+{% highlight javascript %}
+(function(angular) {
+
+    angular.module('todoDirectives', [])
+        .directive('todoFlash', function() {
+            return {
+                restrict: 'AE',
+                replace: true,
+                templateUrl: 'views/error.html'
+            }
+        })
+
+})(angular);
+{% endhighlight %}
+
+        Since we've told the directive to look for <code>error.html</code>, let's go define it now.
+        </p>
+        <p>
+            <h3>error.html</h3>
+            <b>Note: </b>this file will go under the <code>views</code> directory. Don't know where that is?
+Go read <a href="{{ page.previous.url | prepend: site.baseurl | replace: '//', '/' }}">Part 1</a> and don't cheat yourself out of learning this fully.
+        That said, here it is :) We're going to utilize the Bootstrap modal component to make a Session Flash.
+
+{% highlight html %}
+<div class="modal fade" >
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"></h4>
+            </div>
+            <div class="modal-body"></div>
+        </div>
+    </div>
+</div>
+{% endhighlight %}
+
+        and we should put a directive element in our <code>index.html</code>
+        </p>
+        <p>
+            <h3>index.html</h3>
+{% highlight html %}
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    ...
+</head>
+<body ng-app="todoApp">
+
+<todo-flash></todo-flash>
+
+<div class="container" ng-controller="MainController" style="margin-top: 20px;">
+    <div class="row">
+        <div class="col-md-12">
+            <ng-include src="'views/list.html'"></ng-include>
+        </div>
+    </div>
+</div>
+
+...
+</body>
+</html>
+{% endhighlight %}
+
+        </p>
+        <p>
+            What we want is a function we can call from any controller, which will trigger a custom Session Flash (Bootstrap modal)
+            with the data that we pass to the function. We can do this with Angular events emitter <code>$emit</code> and listener
+            <code>$on</code>. Because our directive element is outside of
+            <code>MainController</code>, it's scope is the <code>$rootScope</code>. This means that any event emitted by a child <code>$scope</code>
+            will be intercepted if we use <code>$on</code> in the <code>todoFlash</code> directive.<br><br>
+            Let's first define our event listener in our directive.
+        </p>
+        <p>
+            <h4>directives.js</h4>
+
+{% highlight javascript %}
+(function(angular) {
+
+    angular.module('todoDirectives', [])
+        .directive('todoFlash', function() {
+            return {
+                restrict: 'AE',
+                replace: 'true',
+                templateUrl: 'views/error.html',
+                link: function(scope, element, attr) {
+                    var e = $(element[0]);
+                    var title = e.find('.modal-title');
+                    var body = e.find('.modal-body');
+                    scope.$on('flashevent', function(event, opts) {
+                        title.html(opts.header);
+                        body.html("<p>"+opts.message+"</p>");
+                        e.modal('show');
+                    })
+                }
+            }
+        })
+
+})(angular);
+{% endhighlight %}
+
+        In our link function, we get the modal title and body as wrapped jQuery objects. <b>Note</b>: Using jQuery with Angular is considered bad practice.
+Yet since we need to include jQuery anyway to power Bootstrap modals, it doesn't hurt to use it in this case.<br>
+        We define an event listener with <code>$on</code>. It listens for
+        <code>flashevent</code> and takes an <code>opts</code> object which must have <code>opts.header</code> and <code>opts.message</code>.
+        Lastly, we trigger the modal.<br><br>
+
+        Next, we write our controller function to trigger the Session Flash. Remember, we'll use <code>$emit</code> to trigger an event from
+        emitting scope to all of its parent scopes. In this case, there's only one parent scope, the <code>$rootScope</code>.
+        </p>
+        <p>
+            <h3>controllers.js</h3>
+
+{% highlight javascript %}
+$scope.flash = function(header, message) {
+    this.$emit('flashevent', {
+        header: header,
+        message: message
+    })
+{% endhighlight %}
+
+        Since controllers.js is getting lengthy, I'm showing only the triggering function <code>$scope.flash</code>. We can call it from
+        within our <code>makeItem</code> function with the <code>this</code> keyword.
+
+{% highlight javascript %}
+$scope.makeItem = function() {
+    if (this.due === "yesterday") {
+        this.flash('Error', 'Can\'t add items due in the past');
+        return;
+    }
+    this.items.push({
+        task: this.task,
+        due: this.due
+    })
+    this.task = this.due = "";
+}
+{% endhighlight %}
+        </p>
+        <p>
+            Now, when we try to add to to-do item with a "Due" field of "yesterday", we see that a Session Flash is triggered:<br>
+            <img src="img/todo_3.png" class="no-source">
+        </p>
+        <p>
+            That's it! We've made a Session Flash, and can call it from any scope by emitting a <code>flashevent</code> event. Look out for
+            <a href="{{ page.next.url | prepend: site.baseurl | replace: '//', '/' }}">Part 3</a>, coming soon, where we'll explore
+            further customization and styling options.
+        </p>
